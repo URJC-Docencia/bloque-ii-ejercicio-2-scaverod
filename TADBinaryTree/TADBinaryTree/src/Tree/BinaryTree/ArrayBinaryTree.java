@@ -177,16 +177,19 @@ public class ArrayBinaryTree<E> extends DrawableTree<E> {
     }
 
     private void insert(BTPos<E> node, int pos) {
+        //TODO: implemenetar este metodo.
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Position<E> insertLeft(Position<E> p, E e) {
+        //TODO: implemenetar este metodo.
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Position<E> insertRight(Position<E> p, E e) {
+        //TODO: implemenetar este metodo.
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
