@@ -177,20 +177,46 @@ public class ArrayBinaryTree<E> extends DrawableTree<E> {
     }
 
     private void insert(BTPos<E> node, int pos) {
-        //TODO: implemenetar este metodo.
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (pos >= tree.size()) {
+            BTPos[] array = new BTPos[pos - this.tree.size() + 1];
+            List<BTPos<E>> list = Arrays.asList(array);
+            tree.addAll(list);
+        }
+        tree.set(pos, node);
+        node.pos = pos;
+
+        //Remove is lazy, so we need remove posible non empty childs when inserting
+        final int leftPos = this.getLeftChildPosition(pos);
+        if (tree.size() > leftPos)
+            tree.set(leftPos, null);
+
+        final int rightPos = getRightChildPosition(pos);
+        if (tree.size() > rightPos)
+            tree.set(rightPos, null);
     }
 
     @Override
     public Position<E> insertLeft(Position<E> p, E e) {
-        //TODO: implemenetar este metodo.
-        throw new UnsupportedOperationException("Not supported yet.");
+        BTPos<E> node = checkPosition(p);
+        if (hasLeft(node)) {
+            throw new IllegalStateException("The node already has a left child");
+        }
+        int pos = getLeftChildPosition(node.pos);
+        BTPos<E> newNode = new BTPos<>(pos, e);
+        insert(newNode, pos);
+        return newNode;
     }
 
     @Override
     public Position<E> insertRight(Position<E> p, E e) {
-        //TODO: implemenetar este metodo.
-        throw new UnsupportedOperationException("Not supported yet.");
+        BTPos<E> node = checkPosition(p);
+        if (hasRight(node)) {
+            throw new IllegalStateException("The node already has a right child");
+        }
+        int pos = getRightChildPosition(node.pos);
+        BTPos<E> newNode = new BTPos<>(pos, e);
+        insert(newNode, pos);
+        return newNode;
     }
 
     @Override
@@ -275,19 +301,43 @@ public class ArrayBinaryTree<E> extends DrawableTree<E> {
     }
 
     private void attach(int pos, ArrayBinaryTree<E> t) {
-        //TODO: implemenetar este metodo.
+        if (pos >= tree.size()) {
+            BTPos[] array = new BTPos[pos - this.tree.size() + 1];
+            List<BTPos<E>> list = Arrays.asList(array);
+            tree.addAll(list);
+        }
+        tree.set(pos, t.tree.get(0));
+        for (Position<E> child : t.children(t.root())) {
+            if (t.hasLeft(child)) {
+                attach(getLeftChildPosition(pos), (ArrayBinaryTree<E>) t.subTree(child));
+            } else if (t.hasRight(child)) {
+                attach(getRightChildPosition(pos), (ArrayBinaryTree<E>) t.subTree(child));
+            }
+        }
     }
 
     @Override
     public void attachLeft(Position<E> h, BinaryTree<E> t1) {
-        //TODO: implemenetar este metodo.
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (hasLeft(h))
+            throw new RuntimeException("This position has left child");
+        if (!t1.isEmpty()) {
+            BTPos<E> p2 = (BTPos<E>) h;
+            //calculamos la posicion en la que tenemos que empezar a colocar el arbol
+            int pos = getLeftChildPosition(p2.pos);
+            attach(pos, (ArrayBinaryTree<E>) t1);
+        }
     }
 
     @Override
     public void attachRight(Position<E> h, BinaryTree<E> t1) {
-        //TODO: implemenetar este metodo.
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (hasRight(h))
+            throw new RuntimeException("This position has right child");
+        if (!t1.isEmpty()) {
+            BTPos<E> p2 = (BTPos<E>) h;
+            //calculamos la posicion en la que tenemos que empezar a colocar el arbol
+            int pos = getRightChildPosition(p2.pos);
+            attach(pos, (ArrayBinaryTree<E>) t1);
+        }
     }
 
     @Override
