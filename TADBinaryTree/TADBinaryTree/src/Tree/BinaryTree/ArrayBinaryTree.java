@@ -185,7 +185,6 @@ public class ArrayBinaryTree<E> extends DrawableTree<E> {
         tree.set(pos, node);
         node.pos = pos;
 
-        //Remove is lazy, so we need remove posible non empty childs when inserting
         final int leftPos = this.getLeftChildPosition(pos);
         if (tree.size() > leftPos)
             tree.set(leftPos, null);
@@ -305,6 +304,12 @@ public class ArrayBinaryTree<E> extends DrawableTree<E> {
             BTPos[] array = new BTPos[pos - this.tree.size() + 1];
             List<BTPos<E>> list = Arrays.asList(array);
             tree.addAll(list);
+
+            // Otra opción
+            /*int range = pos - this.tree.size() + 1;
+            for (int i = 0; i < range; i++) {
+                tree.add(null);
+            }*/
         }
         tree.set(pos, t.tree.get(0));
         for (Position<E> child : t.children(t.root())) {
